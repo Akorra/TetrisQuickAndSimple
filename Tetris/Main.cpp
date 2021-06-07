@@ -22,6 +22,12 @@ int Rotate(int px, int py, int r)
 	return 0;
 }
 
+bool isLegalMove(int nTetromino, int nRotation, int nPosX, int nPosy)
+{
+
+	return true;
+}
+
 int main()
 {
 	// Create Assets 4x4 Tetrominos
@@ -49,11 +55,19 @@ int main()
 
 	while (!bGameOver)
 	{
+		// GAME TIMING
+		 
+		
+		// INPUT
+		
+		// GAME LOGIC
+		 
+		// RENDER OUTPUT
+
 		// Draw Field
-		pField = new unsigned char[nFieldWidth * nFieldHeight];
 		for (int x = 0; x < nFieldWidth; x++)
 			for (int y = 0; y < nFieldHeight; y++)
-				pField[y * nFieldWidth + x] = (x == 0 || x == nFieldWidth - 1 || y == nFieldHeight - 1) ? 9 : 0;
+				screen[(y+2)*nScreenWidth + (x+2)] = L" ABCDEFG=#"[pField[y*nFieldWidth+x]];
 		
 		// Display Frame
 		WriteConsoleOutputCharacter(hConsole, screen, nScreenWidth * nScreenHeight, { 0,0 }, &dwBytesWritten);
