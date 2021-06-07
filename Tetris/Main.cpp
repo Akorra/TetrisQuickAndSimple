@@ -87,6 +87,7 @@ int main()
 	int nSpeedCounter = 0;
 	bool bForceDown = false;
 	int nPieceCount = 0;
+	int nScore = 0;
 
 	std::vector<int> vLine;
 
@@ -123,11 +124,14 @@ int main()
 			else
 			{
 				//Lock current piece in field
-				// Draw Current Piece
 				for (int px = 0; px < 4; px++)
 					for (int py = 0; py < 4; py++)
 						if (tetromino[nCurrentPiece][Rotate(px, py, nCurrentRotation)] == L'X')
 							pField[(nCurrentY + py) * nFieldWidth + (nCurrentX + px)] = nCurrentPiece + 1; 
+
+				nPieceCount++;
+				if (nPieceCount % 10 == 0)
+					if (nSpeed >= 10) nSpeed--;
 
 				// Check have we vcreated horizontal lines
 				for (int py = 0; py < 4; py++)
@@ -146,6 +150,10 @@ int main()
 							vLine.push_back(nCurrentY + py);
 						}
 					}
+
+				nScore += 25;
+				if (!vLine.empty()) 
+					nScore += (1 << vLine.size() * 100);
 
 				///choose next piece
 				nCurrentX = nFieldWidth / 2;
@@ -172,7 +180,9 @@ int main()
 			for (int py = 0; py < 4; py++)
 				if (tetromino[nCurrentPiece][Rotate(px, py, nCurrentRotation)] == L'X')
 					screen[(nCurrentY + py + 2) * nScreenWidth + (nCurrentX + px + 2)] = nCurrentPiece + 65; //+ 65 for ascii letters
-		
+
+		// Draw Score
+		swprintf_s(&screen[2 * nScreenWidth + nFieldWidth + 6], 16, L"SCORE: %8d", nScore);
 
 		if (!vLine.empty())
 		{
@@ -194,6 +204,11 @@ int main()
 		// Display Frame
 		WriteConsoleOutputCharacter(hConsole, screen, nScreenWidth * nScreenHeight, { 0,0 }, &dwBytesWritten);
 	}
+
+	// Oh Dear
+	CloseHandle(hConsole);
+	std::cout << "Game Over!! Score: " << nScore << std::endl;
+	system("pause");
 
 	return 0;
 }
